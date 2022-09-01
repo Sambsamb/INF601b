@@ -9,11 +9,13 @@ s = socket.socket()            # Create a socket object
 host = '1.2.3.4'               # Remote Server IP
 port = 20001                   # Remote Server Port
 
+"""
 print (s)
 print (host)
 print (port)
 
 exit()
+"""
 
 s.connect((host, port))
 print (s.recv(1024))
