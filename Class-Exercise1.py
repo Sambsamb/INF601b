@@ -13,3 +13,4 @@ class Vehicle:
 # Class usage:
 mercedes = Vehicle(150, 33)
 print("Mercedes: max_speed", mercedes.max_speed, ", mileage", mercedes.mileage)
+

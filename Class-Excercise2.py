@@ -24,3 +24,4 @@ class Bus(Vehicle):
 # Child Class usage:
 volvo = Bus("School Volvo", 180, 12)
 print(volvo)
+
