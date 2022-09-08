@@ -81,7 +81,6 @@ Successfully installed PyJWT-2.4.0 azure-common-1.1.28 azure-core-1.25.1 azure-i
 # Import the needed credential and management objects from the libraries.
 from azure.mgmt.resource import ResourceManagementClient
 from azure.identity import AzureCliCredential
-import os
 
 # Input
 subscription_id = "91f711e4-1620-4e8b-a64c-92a170101010"
@@ -91,6 +90,25 @@ tag_owner = "Sam Boutros"
 tag_endoflife = "12/31/2023"
 
 # Acquire a credential object using CLI-based authentication.
+"""
+We must login to Azure tenant first. In a Terminal window:
+    az login
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code ABCDEFGHI to authenticate.
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "12341234-1234-1234-1234-123412341234",
+    "isDefault": true,
+    "name": "Sam something",
+    "state": "Enabled",
+    "tenantId": "12341234-1234-1234-1234-123412341234",
+    "user": {
+      "name": "sam@something.com",
+      "type": "user"
+    }
+  }
+]
+"""
 credential = AzureCliCredential()
 
 # Obtain the management object for resources.
@@ -103,35 +121,14 @@ rg_result = resource_client.resource_groups.create_or_update(
         "location": location
     }
 )
-
-# Within the ResourceManagementClient is an object named resource_groups,
-# which is of class ResourceGroupsOperations, which contains methods like
-# create_or_update.
-#
-# The second parameter to create_or_update here is technically a ResourceGroup
-# object. You can create the object directly using ResourceGroup(location=LOCATION)
-# or you can express the object as inline JSON as shown here. For details,
-# see Inline JSON pattern for object arguments at
-# https://docs.microsoft.com/azure/developer/python/azure-sdk-overview#inline-json-pattern-for-object-arguments.
-
 print(f"Provisioned resource group {rg_result.name} in the {rg_result.location} region")
 
-# The return value is another ResourceGroup object with all the details of the
-# new group. In this case the call is synchronous: the resource group has been
-# provisioned by the time the call returns.
-
-# To update the resource group, repeat the call with different properties, such
-# as tags:
-rg_result = resource_client.resource_groups.create_or_update(
+# Update RG, adding tags
+Rg_result = resource_client.resource_groups.create_or_update(
     resourcegroup_name,
     {
         "location": location,
         "tags": { "owner":tag_owner, "EndOfLife":tag_endoflife }
     }
 )
-
 print(f"Updated resource group {rg_result.name} with tags")
-
-# Optional lines to delete the resource group. begin_delete is asynchronous.
-# poller = resource_client.resource_groups.begin_delete(rg_result.name)
-# result = poller.result()
